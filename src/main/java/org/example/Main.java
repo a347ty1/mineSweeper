@@ -5,6 +5,8 @@ import java.util.ArrayList;
 // TODO: Most of project. Most the base object is there but needs filling.
 // TODO: Game Logic
 // TODO: Count bombs
+// TODO: Add bombs to the whole map
+// TODO: Remove  this
 // TODO: Count Flags on whole map
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
