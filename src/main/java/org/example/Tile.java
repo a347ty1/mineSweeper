@@ -19,6 +19,7 @@ public class Tile {
     int adjBomb = 0;
     int gridXMax = 0;
     int gridYMax = 0;
+    boolean isExploded = false;
 
 
     Tile(int x, int y, int gridXMaxx, int gridYMaxx) {
