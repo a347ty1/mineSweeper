@@ -11,8 +11,8 @@ import java.util.ArrayList;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    int gridXMax = 1;
-    int gridYMax = 1;
+    int gridXMax = 2;
+    int gridYMax = 2;
     char mine = '¤';
     char flag = '¶';
     char empty = '░';
@@ -24,8 +24,8 @@ public class Main {
 
 
     public static void main(String[] args) {// Main running loop, make this run good
-        int gridXMax = 1;
-        int gridYMax = 1;
+        int gridXMax = 2;
+        int gridYMax = 2;
         // These chars are effectively the sprites for the game grid
         char mine = '¤';
         char flag = '¶';
@@ -40,29 +40,35 @@ public class Main {
 
     public static ArrayList<ArrayList<Tile>> constructGrid(int gridXMax, int gridYMax) {
         // Grids are made of y rows of x width
-        ArrayList<ArrayList<Tile>> grid = new ArrayList<>(gridXMax);
-        ArrayList<Tile> row = new ArrayList<>(gridYMax);
+        ArrayList<ArrayList<Tile>> grid = new ArrayList<>();
+        ArrayList<Tile> row = new ArrayList<>();
 
         for (int y = 0; y < gridYMax; y++) {
             for (int x = 0; x < gridYMax; x++) {
-                row.set(x, new Tile());
+                row.add(new Tile(x,y, gridXMax, gridYMax));
             }
-            grid.add(y, row);
+            grid.add(row);
         }
         return grid;
     }
 
     public static void printGrid(ArrayList<ArrayList<Tile>> grid) {
+        // Printing a list is made of rows. Send all the rows to a buffer and print them one at a time
         String buffer = "";
         for (ArrayList<Tile> Row : grid) {
             for (Tile tile : Row) {
-                buffer += Row;
+                buffer += tile.displayChar;
                 ;
             }
             System.out.println(buffer);
             buffer = "";
         }
     }
-
+    /*public static class Tile{
+        char displayChar = '█';
+        public static void main(String[] args) {
+            char displayChar = '█';
+        }
+    }*/
 
 }
