@@ -20,10 +20,10 @@ public class Main {
     char flagWrong = '╔';
 
     ArrayList<Tile> col = new ArrayList<>(); // Columns are lists of tiles
-    ArrayList<ArrayList<Tile>>  grid = new ArrayList<>(); // A grid is rows of columns of tiles
+    ArrayList<ArrayList<Tile>> grid = new ArrayList<>(); // A grid is rows of columns of tiles
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {// Main running loop, make this run good
         int gridXMax = 1;
         int gridYMax = 1;
         // These chars are effectively the sprites for the game grid
@@ -33,110 +33,36 @@ public class Main {
         char undug = '█';
         char flagWrong = '╔';
         //TODO: A list called Grid that is made of tiles between 0 and gridMax should be built
+        ArrayList<ArrayList<Tile>> grid = constructGrid(gridXMax, gridYMax);
+        System.out.println(grid);
+        printGrid(grid);
+    }
 
-        }
-
-    public ArrayList<ArrayList<Tile>> constructGrid(int gridXMax, int gridYMax){
+    public static ArrayList<ArrayList<Tile>> constructGrid(int gridXMax, int gridYMax) {
+        // Grids are made of y rows of x width
         ArrayList<ArrayList<Tile>> grid = new ArrayList<>(gridXMax);
-        ArrayList<Tile> row = new ArrayList <>(gridYMax);
+        ArrayList<Tile> row = new ArrayList<>(gridYMax);
 
-        for (int y = 0 ; y < gridYMax ; y++){
-            for (int x = 0; x < gridYMax ; x++){
-             row.set(x, new Tile());
+        for (int y = 0; y < gridYMax; y++) {
+            for (int x = 0; x < gridYMax; x++) {
+                row.set(x, new Tile());
             }
-            grid.add(y,row);
+            grid.add(y, row);
         }
         return grid;
     }
 
-    public class Tile {
-        char displayChar = '█';
-        boolean hasBomb = false;
-        boolean isDug = false;
-        boolean hasFlag = false;
-        boolean isFlaggedCorrect = (hasBomb == hasFlag);
-        int posX = 1;
-        int posY = 1;
-        int adjBomb = 0;
-
-
-
-        public static void main(String[] args){
-            char displayChar = '█';
-            boolean hasBomb = false;
-            boolean hasAdjacentBomb = false;
-            boolean isDug = false;
-            boolean hasFlag = false;
-            boolean isFlaggedCorrect = (hasBomb == hasFlag);
-            int posX = 1;
-            int posY = 1;
-            int adjBomb = 0;
-        }
-        public void dig() {
-            if (!isDug) {
-                if (!hasFlag) {
-                    isDug = true;
-                    if (hasBomb) {
-                        System.out.println("Game over");
-                        // TODO: make this end the game
-                    } else {
-                        adjBomb = getAdjBomb();
-                        if (adjBomb == 0) {
-                            this.reveal();
-                            displayChar = empty; //
-                        }
-                        else{
-                            displayChar = '0';
-                            displayChar += adjBomb;
-                        }
-                    }
-                }
-                System.out.println("Can't dig flag!");
+    public static void printGrid(ArrayList<ArrayList<Tile>> grid) {
+        String buffer = "";
+        for (ArrayList<Tile> Row : grid) {
+            for (Tile tile : Row) {
+                buffer += Row;
+                ;
             }
-            System.out.println("Tile Already Dug");
-
+            System.out.println(buffer);
+            buffer = "";
         }
-
-        public void checkFlag(){
-            isFlaggedCorrect = (hasBomb == hasFlag);
-        }
-        private int getAdjMin(int x){
-            if (x == 0) {return 0;}
-            else {return x-1;}
-        }
-        private int getAdjMax(int position, int gridVMax){
-            if (position == gridVMax) { return gridVMax;}
-            else {return position+1;}
-        }
-        public int getAdjBomb() {
-            int xMin = getAdjMin(posX);
-            int xMax = getAdjMax(posX, gridXMax);
-            int yMin = getAdjMin(posY);
-            int yMax = getAdjMax(posY, gridYMax);
-            int bombCount = 0;
-            for (int x = xMin; x < xMax; x++) {//TODO: Check this arithmatic
-                for (int y = yMin; y < yMax; y++) {
-                    if (grid.get(x).get(y).hasBomb) {
-                        bombCount++;
-                    }
-                }
-            }
-            return bombCount;
-        }
-
-        public void reveal(){
-            //TODO this is for a reveal where
-            int xMin = getAdjMin(posX);
-            int xMax = getAdjMax(posX, gridXMax);
-            int yMin = getAdjMin(posY);
-            int yMax = getAdjMax(posY, gridYMax);
-            for (int x = xMin; x < xMax; x++) {//TODO: Check this arithmatic
-                for (int y = yMin; y<yMax; y++){
-                    grid.get(x).get(y).dig();
-                }
-            }
-
-        }
-
     }
+
+
 }
