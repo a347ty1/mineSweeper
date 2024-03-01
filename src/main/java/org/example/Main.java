@@ -4,12 +4,8 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// TODO: Most of project. Most the base object is there but needs filling.
-// TODO: Game Logic
-// TODO: Count bombs
-// TODO: Add bombs to the whole map
-// TODO: Remove  this
-// TODO: Count Flags on whole map
+
+// TODO: reveal bombs
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
@@ -32,19 +28,32 @@ public class Main {
     static ArrayList<ArrayList<Tile>> grid = new ArrayList<>(); // A grid is rows of columns of tiles
 
     static int tileCount = 0;
-    static int bombPercent = 50;
+    static int bombPercent = 100;
+    static boolean firstDig = true;
 
 
     public static void main(String[] args) {// Main running loop, make this run good
         //TODO: Custom size
-        gridXMax = 4;
-        gridYMax = 4;
+        System.out.println("Input Grid Size");
+        System.out.println("X:");
+        gridXMax = getInputInt(16);
+        System.out.println("Y:");
+        gridYMax = getInputInt(16);
+
         tileCount = gridXMax * gridYMax;
         tilesHidden = tileCount;
 
         // On different difficulties, have different % of bombs.
         //TODO: Custom Difficulty
-        bombPercent = 10; // normal 10% difficulty
+        bombPercent = -1; // normal 10% difficulty
+        do {
+            System.out.println("Difficulty (% tiles that are bombs):\n" +
+                    "Easy (10)\n" +
+                    "Medium (15)\n" +
+                    "Hard (20)");
+            bombPercent = getInputInt(100);
+        } while  (bombPercent < 0 || bombPercent > 100);
+
         // These chars are effectively the sprites for the game grid
         char mine = '¤';
         char flag = '¶';
@@ -53,58 +62,77 @@ public class Main {
         char flagWrong = '╔';
         //TODO: A list called Grid that is made of tiles between 0 and gridMax should be built
         grid = constructGrid(gridXMax, gridYMax);
-        printGrid();
+        printGrid(false);
         addBombs();
 
         Scanner scan = new Scanner(System.in);
         System.out.println(bombCount);
 
 
-        // A test puts a bomb in the first tile
-        /*Tile bombTile = grid.get(0).get(0);
-        bombTile.hasBomb = true;
-        ArrayList<Tile> slip = grid.getFirst();
-        slip.set(0, bombTile);
-        grid.set(0, slip);
-        */
+        int x = -1;
+        int y = -1;
+        int mode = -1;
 
-        for (;;) {
+        while (true) {
             System.out.println();
-            System.out.printf("%d bombs, %d tiles, %d flags\n", bombCount, tilesHidden, flagCount);
-            printGrid();
             // Digs where asked
-            System.out.println("Mode 1) Flag - 2) Dig:"); //TODO: input protection
-            int mode = scan.nextInt();
-            System.out.println("Input X:");
-            int x = scan.nextInt();
-            System.out.println("Input Y:");
-            int y = scan.nextInt();
+
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+
+
+            System.out.printf("%d bombs, %d tiles, %d flags\n", bombCount, tilesHidden, flagCount);
+            printGrid(false);
+            while (true) {
+                System.out.println("Mode 1) Flag - 2) Dig:"); //TODO: input protection
+                mode = getInputInt(2);
+                if (mode == 1 || mode == 2) {
+                    break;
+                }
+            }
+            while (true) {
+                System.out.println("Input X (-1 to go back):");
+                x = getInputInt(gridXMax - 1);
+                if (x == -1) {
+                    mode = -1;
+                    break;
+                }
+                System.out.println("Input Y (-1 to go back):");
+                y = getInputInt(gridYMax - 1);
+                if (y == -1) {
+                    mode = -1;
+                    break;
+                }
+                if (x >= 0 && y >= 0) {
+                    break;
+                }
+            }
+
 
             if (mode == 2) {
                 dig(grid.get(y).get(x), false);
                 if (isGameOver) {
-                    printGrid();
+                    printGrid(true);
                     break;
                 }
-                if (tilesHidden == bombCount || flagCountCorrect == bombCount) {
+                if (tilesHidden == bombCount || (flagCountCorrect == bombCount && flagCount == flagCountCorrect)) {
                     System.out.println("Victory!");
-                    printGrid();
+                    printGrid(true);
                     break;
                 }
-            }
-            else if (mode == 1) {
+            } else if (mode == 1) {
                 toggleFlag(grid.get(y).get(x));
-                if (flagCountCorrect == bombCount){ //TODO: Fix weird flagging behaviour
+                if (flagCountCorrect == bombCount) { //TODO: Fix weird flagging behaviour
                     System.out.println("Victory!");
-                    printGrid();
+                    printGrid(true);
                     break;
                 }
             }
-
-            //System.out.println(grid.get(1).get(1).displayChar);
         }
+        //System.out.println(grid.get(1).get(1).displayChar);
     }
-    public static void toggleFlag(Tile tile){
+
+    public static void toggleFlag(Tile tile) {
         if (!tile.isDug) {
             int x = tile.posX;
             int y = tile.posY;
@@ -125,10 +153,9 @@ public class Main {
             tile.displayChar = (tile.hasFlag) ? flag : undug;
             tile.isFlaggedCorrect = tile.hasFlag == tile.hasBomb;
 
-            strip.set(y,tile);
-            grid.set(x,strip);
-        }
-        else{
+            strip.set(x, tile);
+            grid.set(y, strip);
+        } else {
             System.out.println("Tile dug already");
         }
 
@@ -149,7 +176,7 @@ public class Main {
         return grid;
     }
 
-    public static void  addBombs() {
+    public static void addBombs() {
         Random rand = new Random();
         for (int i = 0; i < gridYMax; i++) {
             ArrayList<Tile> strip = grid.get(i);
@@ -158,18 +185,30 @@ public class Main {
                 if (rand.nextInt(100) <= bombPercent) {
                     bombCount++;
                     tile.hasBomb = true;
-                    strip.set(j,tile);
+                    strip.set(j, tile);
                 }
-                grid.set(i,strip);
+                grid.set(i, strip);
             }
         }
     }
 
-    public static void printGrid() {
+    public static void printGrid(boolean isEndGame) {
         // Printing a list is made of rows. Send all the rows to a buffer and print them one at a time
         String buffer = "";
         for (ArrayList<Tile> Row : grid) {
             for (Tile tile : Row) {
+                if (isEndGame) {
+                    if (tile.hasFlag && tile.hasBomb){
+                        tile.displayChar = tile.flag;
+                    }
+                    else if (tile.hasFlag && !tile.hasBomb){
+                        tile.displayChar = tile.flagWrong;
+                    }
+                    else if (tile.hasBomb){
+                        tile.displayChar = tile.mine;
+                    }
+
+                }
                 buffer += tile.displayChar;
                 buffer += ' ';
             }
@@ -223,24 +262,29 @@ public class Main {
     public static Tile dig(Tile tile, boolean isRipple) {
         if (!tile.isDug) {
             if (!tile.hasFlag) {
-                tile.isDug = true;
                 if (tile.hasBomb) {
+                    if (firstDig){
+                        firstDig = false;
+                        tile.hasBomb = false;
+                        bombCount--;
+                        return dig(tile, true);
+                    }
                     System.out.println("Game over");
                     isGameOver = true;
                     tile.displayChar = mine;
                     return tile;
                     // TODO: make this end the game
                 } else {
+                    tile.isDug = true;
                     int adjBomb = getAdjBomb(tile);
                     if (adjBomb == 0) {
                         reveal(tile);
                         tile.displayChar = empty; //
-                        tilesHidden--;
                     } else {
                         tile.displayChar = '0';
                         tile.displayChar += adjBomb;
-                        tilesHidden--;
                     }
+                    tilesHidden--;
 
                 }
             } else if (!isRipple) {
@@ -251,4 +295,19 @@ public class Main {
         }
         return tile;
     }
+
+    public static int getInputInt(int max) {
+        Scanner scan = new Scanner(System.in);
+        while (true) {
+            if (scan.hasNextInt()) {
+                int val = scan.nextInt();
+                if (val >= -1 && val <= max){
+                    return val;
+                } else {
+                    System.out.println("Invalid Value, try again:");
+                }
+            }
+        }
+    }
+
 }
