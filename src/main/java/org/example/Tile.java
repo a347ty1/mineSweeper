@@ -9,8 +9,8 @@ public class Tile {
     char undug = '█';
     char flagWrong = '╔';
 
-    char displayChar = '█';
-    boolean hasBomb = false;
+    public char displayChar = '█';
+    public boolean hasBomb = false;
     boolean isDug = false;
     boolean hasFlag = false;
     boolean isFlaggedCorrect = (hasBomb == hasFlag);
