@@ -9,6 +9,7 @@ import java.util.Scanner;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+
     static boolean digMode = true;
     static int tilesRevealed = 0;
     static int tilesHidden = 0;
@@ -17,11 +18,11 @@ public class Main {
     static int flagCountCorrect = 0;
     static int gridXMax = 1;
     static int gridYMax = 1;
-    static char mine = '¤';
-    static char flag = '¶';
-    static char empty = '░';
-    static char undug = '█';
-    static char flagWrong = '╔';
+    static final char mine = '¤';
+    static final char flag = '¶';
+    static final char empty = '░';
+    static final  char undug = '█';
+    static final char flagWrong = '╔';
     static boolean isGameOver = false;
 
     static ArrayList<Tile> col = new ArrayList<>(); // Columns are lists of tiles
@@ -121,6 +122,7 @@ public class Main {
 
             if (mode == 2) {
                 dig(grid.get(y).get(x), false);
+                firstDig = false;
                 if (isGameOver) {
                     printGrid(true);
                     break;
@@ -240,11 +242,34 @@ public class Main {
                     }
 
                 }
-                buffer += tile.displayChar;
+                buffer += getColor(tile.displayChar) + tile.displayChar + getColor('0');
                 buffer += ' ';
+            }
+            if (Row.get(0).posY % 5 == 0)
+            {
+                buffer += "\t" + Row.get(0).posY;
             }
             buffer += '\n';
         }
+        buffer += '\t';
+        for (int i = 0; i < gridXMax; i++) {
+            if (i != 0){
+                buffer += " ";
+            }
+            if (i % 5 == 0) {
+                buffer += i;
+            } else if (((i + 1) % 5 == 0) && i >= 10 && i <= 100) {
+                buffer += ++i;
+                buffer += " ";
+            } else if ((i + 2) % 5 == 0 && i >= 100 && i <= 1000) {
+                buffer += (i + 2);
+                i += 2;
+                buffer += "  ";
+            } else {
+                buffer += " ";
+            }
+        }
+
         System.out.println(buffer);
 
     }
@@ -339,6 +364,53 @@ public class Main {
                     System.out.println("Invalid Value, try again:");
                 }
             }
+        }
+    }
+
+    public static String getColor(char character){
+        String ANSI_RESET = "\u001B[0m";
+        String ANSI_BLACK = "\u001B[30m";
+        String ANSI_RED = "\u001B[31m";
+        String ANSI_GREEN = "\u001B[32m";
+        String ANSI_YELLOW = "\u001B[33m";
+        String ANSI_BLUE = "\u001B[34m";
+        String ANSI_PURPLE = "\u001B[35m";
+        String ANSI_CYAN = "\u001B[36m";
+        String ANSI_WHITE = "\u001B[37m";
+
+        String BLACK_BACKGROUND = "\u001B[40m";
+        String RED_BACKGROUND = "\u001B[41m";
+        String GREEN_BACKGROUND = "\u001B[42m";
+        String YELLOW_BACKGROUND = "\u001B[43m";
+        String BLUE_BACKGROUND = "\u001B[44m";
+        String PURPLE_BACKGROUND = "\u001B[45m";
+        String CYAN_BACKGROUND	= "\u001B[46m";
+        String WHITE_BACKGROUND	= "\u001B[47m";
+        switch(character){
+            case '1':
+                return ANSI_BLUE;
+            case '2':
+                return ANSI_GREEN;
+            case '3':
+                return ANSI_RED;
+            case '4':
+                return ANSI_PURPLE;
+            case '5':
+                return ANSI_CYAN;
+            case '6':
+                return ANSI_WHITE + RED_BACKGROUND;
+            case '7':
+                return ANSI_WHITE + PURPLE_BACKGROUND;
+            case '8':
+                return ANSI_BLACK + WHITE_BACKGROUND;
+            case mine:
+                return ANSI_CYAN;
+            case flag:
+                return ANSI_GREEN;
+            case flagWrong:
+                return ANSI_RED;
+            default:
+                return ANSI_RESET;
         }
     }
 }
