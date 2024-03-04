@@ -30,15 +30,25 @@ public class Main {
     static int tileCount = 0;
     static int bombPercent = 100;
     static boolean firstDig = true;
+    static int sizeMax = 32;
 
 
     public static void main(String[] args) {// Main running loop, make this run good
         //TODO: Custom size
-        System.out.println("Input Grid Size");
-        System.out.println("X:");
-        gridXMax = getInputInt(16);
-        System.out.println("Y:");
-        gridYMax = getInputInt(16);
+        while(true) {
+            System.out.println("Input Grid Size");
+            System.out.println("X:");
+            gridXMax = getInputInt(sizeMax);
+            System.out.println("Y:");
+            gridYMax = getInputInt(sizeMax);
+
+            if (gridXMax >= 1 || gridYMax >= 1){
+                break;
+            }
+            else {
+                System.out.printf("Grid size invalid. Please input value between 1 and %d for each dimension.", sizeMax);
+            }
+        }
 
         tileCount = gridXMax * gridYMax;
         tilesHidden = tileCount;
@@ -81,7 +91,7 @@ public class Main {
             System.out.flush();
 
 
-            System.out.printf("%d bombs, %d tiles, %d flags\n", bombCount, tilesHidden, flagCount);
+            System.out.printf("%d bomb(s), %d tile(s), %d flag(s)\n", bombCount, tilesHidden, flagCount);
             printGrid(false);
             while (true) {
                 System.out.println("Mode 1) Flag - 2) Dig:"); //TODO: input protection
@@ -194,17 +204,38 @@ public class Main {
 
     public static void printGrid(boolean isEndGame) {
         // Printing a list is made of rows. Send all the rows to a buffer and print them one at a time
-        String buffer = "";
+        String buffer = "\t";
+        for (int i = 0; i < gridXMax; i++) {
+            if (i != 0){
+                buffer += " ";
+            }
+            if (i % 5 == 0) {
+                buffer += i;
+            } else if (((i + 1) % 5 == 0) && i >= 10 && i <= 100) {
+                buffer += ++i;
+                buffer += " ";
+            } else if ((i + 2) % 5 == 0 && i >= 100 && i <= 1000) {
+                buffer += (i + 2);
+                i += 2;
+                buffer += "  ";
+            } else {
+                buffer += " ";
+            }
+        }
+
+        buffer += "\n";
         for (ArrayList<Tile> Row : grid) {
+            if (Row.get(0).posY % 5 == 0) {
+                buffer += Row.get(0).posY;
+            }
+            buffer += "\t";
             for (Tile tile : Row) {
                 if (isEndGame) {
-                    if (tile.hasFlag && tile.hasBomb){
+                    if (tile.hasFlag && tile.hasBomb) {
                         tile.displayChar = tile.flag;
-                    }
-                    else if (tile.hasFlag && !tile.hasBomb){
+                    } else if (tile.hasFlag && !tile.hasBomb) {
                         tile.displayChar = tile.flagWrong;
-                    }
-                    else if (tile.hasBomb){
+                    } else if (tile.hasBomb) {
                         tile.displayChar = tile.mine;
                     }
 
@@ -215,6 +246,7 @@ public class Main {
             buffer += '\n';
         }
         System.out.println(buffer);
+
     }
 
 
@@ -309,5 +341,4 @@ public class Main {
             }
         }
     }
-
 }
