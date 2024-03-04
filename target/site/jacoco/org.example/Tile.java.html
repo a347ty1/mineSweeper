@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MineSweeper</a> &gt; <a href="index.source.html" class="el_package">org.example</a> &gt; <span class="el_source">Tile.java</span></div><h1>Tile.java</h1><pre class="source lang-java linenums">package org.example;
+
+import java.util.ArrayList;
+
+public class Tile {
+<span class="fc" id="L6">    char mine = '¤';</span>
+<span class="fc" id="L7">    char flag = '¶';</span>
+<span class="fc" id="L8">    char empty = '░';</span>
+<span class="fc" id="L9">    char undug = '█';</span>
+<span class="fc" id="L10">    char flagWrong = '╔';</span>
+
+<span class="fc" id="L12">    public char displayChar = '█';</span>
+<span class="fc" id="L13">    public boolean hasBomb = false;</span>
+<span class="fc" id="L14">    boolean isDug = false;</span>
+<span class="fc" id="L15">    boolean hasFlag = false;</span>
+<span class="pc bpc" id="L16" title="1 of 2 branches missed.">    boolean isFlaggedCorrect = (hasBomb == hasFlag);</span>
+<span class="fc" id="L17">    int posX = 0;</span>
+<span class="fc" id="L18">    int posY = 0;</span>
+<span class="fc" id="L19">    int adjBomb = 0;</span>
+<span class="fc" id="L20">    int gridXMax = 0;</span>
+<span class="fc" id="L21">    int gridYMax = 0;</span>
+<span class="fc" id="L22">    boolean isExploded = false;</span>
+
+
+<span class="fc" id="L25">    Tile(int x, int y, int gridXMaxx, int gridYMaxx) {</span>
+<span class="fc" id="L26">        displayChar = undug;</span>
+<span class="fc" id="L27">        hasBomb = false;</span>
+<span class="fc" id="L28">        isDug = false;</span>
+<span class="fc" id="L29">        hasFlag = false;</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        isFlaggedCorrect = (hasBomb == hasFlag);</span>
+<span class="fc" id="L31">        gridXMax = gridXMaxx;</span>
+<span class="fc" id="L32">        gridYMax = gridYMaxx;</span>
+<span class="fc" id="L33">        posX = x;</span>
+<span class="fc" id="L34">        posY = y;</span>
+<span class="fc" id="L35">        adjBomb = 0;</span>
+<span class="fc" id="L36">    }</span>
+
+    public void toggleFlag() {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (!isDug) {</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (hasFlag) {</span>
+<span class="nc" id="L41">                hasFlag = false;</span>
+<span class="nc" id="L42">                displayChar = undug;</span>
+            } else {
+<span class="nc" id="L44">                hasFlag = true;</span>
+<span class="nc" id="L45">                displayChar = flag;</span>
+            }
+        }
+<span class="nc" id="L48">    }</span>
+
+    public void checkFlag() {
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (hasFlag) {</span>
+<span class="nc" id="L52">            isFlaggedCorrect = hasBomb;</span>
+        }
+<span class="nc" id="L54">    }</span>
+
+
+    public static void main(String[] args) {
+<span class="nc" id="L58">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MineSweeper</a> &gt; <a href="index.source.html" class="el_package">org.example</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package org.example;
+
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+//TIP To &lt;b&gt;Run&lt;/b&gt; code, press &lt;shortcut actionId=&quot;Run&quot;/&gt; or
+// click the &lt;icon src=&quot;AllIcons.Actions.Execute&quot;/&gt; icon in the gutter.
+<span class="nc" id="L9">public class Main {</span>
+
+<span class="fc" id="L11">    static boolean digMode = true;</span>
+<span class="fc" id="L12">    static int tilesRevealed = 0;</span>
+<span class="fc" id="L13">    static int tilesHidden = 0;</span>
+<span class="fc" id="L14">    static int bombCount = 0;</span>
+<span class="fc" id="L15">    static int flagCount = 0;</span>
+<span class="fc" id="L16">    static int flagCountCorrect = 0;</span>
+<span class="fc" id="L17">    static int gridXMax = 1;</span>
+<span class="fc" id="L18">    static int gridYMax = 1;</span>
+    static final char mine = '¤';
+    static final char flag = '¶';
+    static final char empty = '░';
+    static final  char undug = '█';
+    static final char flagWrong = '╔';
+<span class="fc" id="L24">    static boolean isGameOver = false;</span>
+
+<span class="fc" id="L26">    static ArrayList&lt;Tile&gt; col = new ArrayList&lt;&gt;(); // Columns are lists of tiles</span>
+<span class="fc" id="L27">    static ArrayList&lt;ArrayList&lt;Tile&gt;&gt; grid = new ArrayList&lt;&gt;(); // A grid is rows of columns of tiles</span>
+
+<span class="fc" id="L29">    static int tileCount = 0;</span>
+<span class="fc" id="L30">    static int bombPercent = 100;</span>
+<span class="fc" id="L31">    static boolean firstDig = true;</span>
+<span class="fc" id="L32">    static int sizeMax = 32;</span>
+
+
+    public static void main(String[] args) {// Main running loop, make this run good
+        //TODO: Custom size
+        while(true) {
+<span class="nc" id="L38">            System.out.println(&quot;Input Grid Size&quot;);</span>
+<span class="nc" id="L39">            System.out.println(&quot;X:&quot;);</span>
+<span class="nc" id="L40">            gridXMax = getInputInt(sizeMax);</span>
+<span class="nc" id="L41">            System.out.println(&quot;Y:&quot;);</span>
+<span class="nc" id="L42">            gridYMax = getInputInt(sizeMax);</span>
+
+<span class="nc bnc" id="L44" title="All 4 branches missed.">            if (gridXMax &gt;= 1 || gridYMax &gt;= 1){</span>
+<span class="nc" id="L45">                break;</span>
+            }
+            else {
+<span class="nc" id="L48">                System.out.printf(&quot;Grid size invalid. Please input value between 1 and %d for each dimension.&quot;, sizeMax);</span>
+            }
+        }
+
+<span class="nc" id="L52">        tileCount = gridXMax * gridYMax;</span>
+<span class="nc" id="L53">        tilesHidden = tileCount;</span>
+
+        // On different difficulties, have different % of bombs.
+<span class="nc" id="L56">        bombPercent = -1; // normal 10% difficulty</span>
+        do {
+<span class="nc" id="L58">            System.out.println(&quot;Difficulty (% tiles that are bombs):\n&quot; +</span>
+                    &quot;Easy (10)\n&quot; +
+                    &quot;Medium (15)\n&quot; +
+                    &quot;Hard (20)&quot;);
+<span class="nc" id="L62">            bombPercent = getInputInt(100);</span>
+<span class="nc bnc" id="L63" title="All 4 branches missed.">        } while  (bombPercent &lt; 0 || bombPercent &gt; 100);</span>
+
+        // These chars are effectively the sprites for the game grid
+<span class="nc" id="L66">        char mine = '¤';</span>
+<span class="nc" id="L67">        char flag = '¶';</span>
+<span class="nc" id="L68">        char empty = '░';</span>
+<span class="nc" id="L69">        char undug = '█';</span>
+<span class="nc" id="L70">        char flagWrong = '╔';</span>
+<span class="nc" id="L71">        grid = constructGrid(gridXMax, gridYMax);</span>
+<span class="nc" id="L72">        printGrid(false);</span>
+<span class="nc" id="L73">        addBombs(grid);</span>
+
+<span class="nc" id="L75">        Scanner scan = new Scanner(System.in);</span>
+<span class="nc" id="L76">        System.out.println(bombCount);</span>
+
+
+<span class="nc" id="L79">        int x = -1;</span>
+<span class="nc" id="L80">        int y = -1;</span>
+<span class="nc" id="L81">        int mode = -1;</span>
+
+        while (true) {
+<span class="nc" id="L84">            System.out.println();</span>
+            // Digs where asked
+
+<span class="nc" id="L87">            System.out.print(&quot;\033[H\033[2J&quot;);</span>
+<span class="nc" id="L88">            System.out.flush();</span>
+
+
+<span class="nc" id="L91">            System.out.printf(&quot;%d bomb(s), %d tile(s), %d flag(s)\n&quot;, bombCount, tilesHidden, flagCount);</span>
+<span class="nc" id="L92">            printGrid(false);</span>
+            while (true) {
+<span class="nc" id="L94">                System.out.println(&quot;Mode \n- 1) Flag\n- 2) Dig:&quot;);</span>
+<span class="nc" id="L95">                mode = getInputInt(2);</span>
+<span class="nc bnc" id="L96" title="All 4 branches missed.">                if (mode == 1 || mode == 2) {</span>
+<span class="nc" id="L97">                    break;</span>
+                }
+            }
+            while (true) {
+<span class="nc" id="L101">                System.out.println(&quot;Input X (-1 to go back):&quot;);</span>
+<span class="nc" id="L102">                x = getInputInt(gridXMax - 1);</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                if (x == -1) {</span>
+<span class="nc" id="L104">                    mode = -1;</span>
+<span class="nc" id="L105">                    break;</span>
+                }
+<span class="nc" id="L107">                System.out.println(&quot;Input Y (-1 to go back):&quot;);</span>
+<span class="nc" id="L108">                y = getInputInt(gridYMax - 1);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                if (y == -1) {</span>
+<span class="nc" id="L110">                    mode = -1;</span>
+<span class="nc" id="L111">                    break;</span>
+                }
+<span class="nc bnc" id="L113" title="All 4 branches missed.">                if (x &gt;= 0 &amp;&amp; y &gt;= 0) {</span>
+<span class="nc" id="L114">                    break;</span>
+                }
+            }
+
+
+<span class="nc bnc" id="L119" title="All 2 branches missed.">            if (mode == 2) {</span>
+<span class="nc" id="L120">                dig(grid.get(y).get(x), false, grid);</span>
+<span class="nc" id="L121">                firstDig = false;</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">                if (isGameOver) {</span>
+<span class="nc" id="L123">                    printGrid(true);</span>
+<span class="nc" id="L124">                    break;</span>
+                }
+<span class="nc bnc" id="L126" title="All 6 branches missed.">                if (tilesHidden == bombCount || (flagCountCorrect == bombCount &amp;&amp; flagCount == flagCountCorrect)) {</span>
+<span class="nc" id="L127">                    System.out.println(&quot;Victory!&quot;);</span>
+<span class="nc" id="L128">                    printGrid(true);</span>
+<span class="nc" id="L129">                    break;</span>
+                }
+<span class="nc bnc" id="L131" title="All 2 branches missed.">            } else if (mode == 1) {</span>
+<span class="nc" id="L132">                toggleFlag(grid.get(y).get(x));</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">                if (flagCountCorrect == bombCount) {</span>
+<span class="nc" id="L134">                    System.out.println(&quot;Victory!&quot;);</span>
+<span class="nc" id="L135">                    printGrid(true);</span>
+<span class="nc" id="L136">                    break;</span>
+                }
+            }
+        }
+        //System.out.println(grid.get(1).get(1).displayChar);
+<span class="nc" id="L141">    }</span>
+
+    public static void toggleFlag(Tile tile) {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (!tile.isDug) {</span>
+<span class="nc" id="L145">            int x = tile.posX;</span>
+<span class="nc" id="L146">            int y = tile.posY;</span>
+<span class="nc" id="L147">            ArrayList&lt;Tile&gt; strip = grid.get(y);</span>
+
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (tile.hasFlag) {</span>
+<span class="nc" id="L150">                flagCount--;</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                if (tile.hasBomb) {</span>
+<span class="nc" id="L152">                    flagCountCorrect--;</span>
+                }
+            } else {
+<span class="nc" id="L155">                flagCount++;</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                if (tile.hasBomb) {</span>
+<span class="nc" id="L157">                    flagCountCorrect++;</span>
+                }
+            }
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            tile.hasFlag = !tile.hasFlag;</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            tile.displayChar = (tile.hasFlag) ? flag : undug;</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">            tile.isFlaggedCorrect = tile.hasFlag == tile.hasBomb;</span>
+
+<span class="nc" id="L164">            strip.set(x, tile);</span>
+<span class="nc" id="L165">            grid.set(y, strip);</span>
+<span class="nc" id="L166">        } else {</span>
+<span class="nc" id="L167">            System.out.println(&quot;Tile dug already&quot;);</span>
+        }
+
+<span class="nc" id="L170">    }</span>
+
+    public static ArrayList&lt;ArrayList&lt;Tile&gt;&gt; constructGrid(int gridXMax, int gridYMax) {
+        // Grids are made of y rows of x width
+<span class="fc" id="L174">        ArrayList&lt;ArrayList&lt;Tile&gt;&gt; grid = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L175">        ArrayList&lt;Tile&gt; row = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        for (int y = 0; y &lt; gridYMax; y++) {</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">            for (int x = 0; x &lt; gridXMax; x++) {</span>
+<span class="fc" id="L178">                row.add(new Tile(x, y, gridXMax, gridYMax));</span>
+            }
+<span class="fc" id="L180">            grid.add(row);</span>
+<span class="fc" id="L181">            row = new ArrayList&lt;&gt;();</span>
+        }
+<span class="fc" id="L183">        return grid;</span>
+    }
+
+    public static void addBombs(ArrayList&lt;ArrayList&lt;Tile&gt;&gt; grid) {
+<span class="fc" id="L187">        Random rand = new Random();</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        for (int i = 0; i &lt; gridYMax; i++) {</span>
+<span class="fc" id="L189">            ArrayList&lt;Tile&gt; strip = grid.get(i);</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">            for (int j = 0; j &lt; gridXMax; j++) {</span>
+<span class="fc" id="L191">                Tile tile = strip.get(j);</span>
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">                if (rand.nextInt(100) &lt;= bombPercent) {</span>
+<span class="fc" id="L193">                    bombCount++;</span>
+<span class="fc" id="L194">                    tile.hasBomb = true;</span>
+<span class="fc" id="L195">                    strip.set(j, tile);</span>
+                }
+<span class="fc" id="L197">                grid.set(i, strip);</span>
+            }
+        }
+<span class="fc" id="L200">    }</span>
+
+    public static void printGrid(boolean isEndGame) {
+        // Printing a list is made of rows. Send all the rows to a buffer and print them one at a time
+<span class="nc" id="L204">        String buffer = &quot;\t&quot;;</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        for (int i = 0; i &lt; gridXMax; i++) {</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">            if (i != 0){</span>
+<span class="nc" id="L207">                buffer += &quot; &quot;;</span>
+            }
+<span class="nc bnc" id="L209" title="All 2 branches missed.">            if (i % 5 == 0) {</span>
+<span class="nc" id="L210">                buffer += i;</span>
+<span class="nc bnc" id="L211" title="All 6 branches missed.">            } else if (((i + 1) % 5 == 0) &amp;&amp; i &gt;= 10 &amp;&amp; i &lt;= 100) {</span>
+<span class="nc" id="L212">                buffer += ++i;</span>
+<span class="nc" id="L213">                buffer += &quot; &quot;;</span>
+<span class="nc bnc" id="L214" title="All 6 branches missed.">            } else if ((i + 2) % 5 == 0 &amp;&amp; i &gt;= 100 &amp;&amp; i &lt;= 1000) {</span>
+<span class="nc" id="L215">                buffer += (i + 2);</span>
+<span class="nc" id="L216">                i += 2;</span>
+<span class="nc" id="L217">                buffer += &quot;  &quot;;</span>
+            } else {
+<span class="nc" id="L219">                buffer += &quot; &quot;;</span>
+            }
+        }
+
+<span class="nc" id="L223">        buffer += &quot;\n&quot;;</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        for (ArrayList&lt;Tile&gt; Row : grid) {</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">            if (Row.get(0).posY % 5 == 0) {</span>
+<span class="nc" id="L226">                buffer += Row.get(0).posY;</span>
+            }
+<span class="nc" id="L228">            buffer += &quot;\t&quot;;</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">            for (Tile tile : Row) {</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">                if (isEndGame) {</span>
+<span class="nc bnc" id="L231" title="All 4 branches missed.">                    if (tile.hasFlag &amp;&amp; tile.hasBomb) {</span>
+<span class="nc" id="L232">                        tile.displayChar = tile.flag;</span>
+<span class="nc bnc" id="L233" title="All 4 branches missed.">                    } else if (tile.hasFlag &amp;&amp; !tile.hasBomb) {</span>
+<span class="nc" id="L234">                        tile.displayChar = tile.flagWrong;</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">                    } else if (tile.hasBomb) {</span>
+<span class="nc" id="L236">                        tile.displayChar = tile.mine;</span>
+                    }
+
+                }
+<span class="nc" id="L240">                buffer += getColor(tile.displayChar) + tile.displayChar + getColor('0');</span>
+<span class="nc" id="L241">                buffer += ' ';</span>
+<span class="nc" id="L242">            }</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">            if (Row.get(0).posY % 5 == 0)</span>
+            {
+<span class="nc" id="L245">                buffer += &quot;\t&quot; + Row.get(0).posY;</span>
+            }
+<span class="nc" id="L247">            buffer += '\n';</span>
+<span class="nc" id="L248">        }</span>
+<span class="nc" id="L249">        buffer += '\t';</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">        for (int i = 0; i &lt; gridXMax; i++) {</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">            if (i != 0){</span>
+<span class="nc" id="L252">                buffer += &quot; &quot;;</span>
+            }
+<span class="nc bnc" id="L254" title="All 2 branches missed.">            if (i % 5 == 0) {</span>
+<span class="nc" id="L255">                buffer += i;</span>
+<span class="nc bnc" id="L256" title="All 6 branches missed.">            } else if (((i + 1) % 5 == 0) &amp;&amp; i &gt;= 10 &amp;&amp; i &lt;= 100) {</span>
+<span class="nc" id="L257">                buffer += ++i;</span>
+<span class="nc" id="L258">                buffer += &quot; &quot;;</span>
+<span class="nc bnc" id="L259" title="All 6 branches missed.">            } else if ((i + 2) % 5 == 0 &amp;&amp; i &gt;= 100 &amp;&amp; i &lt;= 1000) {</span>
+<span class="nc" id="L260">                buffer += (i + 2);</span>
+<span class="nc" id="L261">                i += 2;</span>
+<span class="nc" id="L262">                buffer += &quot;  &quot;;</span>
+            } else {
+<span class="nc" id="L264">                buffer += &quot; &quot;;</span>
+            }
+        }
+
+<span class="nc" id="L268">        System.out.println(buffer);</span>
+
+<span class="nc" id="L270">    }</span>
+
+
+    public static int getAdjBomb(Tile tile) { //
+<span class="fc" id="L274">        int posX = tile.posX;</span>
+<span class="fc" id="L275">        int posY = tile.posY;</span>
+
+<span class="fc" id="L277">        int xMin = Math.max(posX - 1, 0);</span>
+<span class="fc" id="L278">        int xMax = Math.min(posX + 1, gridXMax - 1);</span>
+<span class="fc" id="L279">        int yMin = Math.max(posY - 1, 0);</span>
+<span class="fc" id="L280">        int yMax = Math.min(posY + 1, gridYMax - 1);</span>
+<span class="fc" id="L281">        int bombCount = 0;</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">        for (int x = xMin; x &lt;= xMax; x++) {//TODO: Check this maths</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">            for (int y = yMin; y &lt;= yMax; y++) {</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">                if (grid.get(y).get(x).hasBomb) {</span>
+<span class="nc" id="L285">                    bombCount++;</span>
+                }
+            }
+        }
+<span class="fc" id="L289">        return bombCount;</span>
+    }
+
+    public static void reveal(Tile tile) {
+        //TODO this is for a reveal where there's no adjacent bombs
+<span class="fc" id="L294">        int posX = tile.posX;</span>
+<span class="fc" id="L295">        int posY = tile.posY;</span>
+<span class="fc" id="L296">        ArrayList&lt;Tile&gt; strip = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L298">        int xMin = Math.max(posX - 1, 0);</span>
+<span class="fc" id="L299">        int xMax = Math.min(posX + 1, gridXMax - 1);</span>
+<span class="fc" id="L300">        int yMin = Math.max(posY - 1, 0);</span>
+<span class="fc" id="L301">        int yMax = Math.min(posY + 1, gridYMax - 1);</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">        for (int y = yMin; y &lt;= yMax; y++) {//TODO: Check this arithmatic</span>
+            //printGrid(grid);
+<span class="nc bnc" id="L304" title="All 2 branches missed.">            for (int x = xMin; x &lt;= xMax; x++) {</span>
+<span class="nc" id="L305">                strip = grid.get(y);</span>
+<span class="nc" id="L306">                strip.set(x, dig(grid.get(y).get(x), true, grid));</span>
+
+            }
+        }
+
+<span class="fc" id="L311">    }</span>
+
+
+    public static Tile dig(Tile tile, boolean isRipple, ArrayList&lt;ArrayList&lt;Tile&gt;&gt; grid) {
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">        if (!tile.isDug) {</span>
+<span class="pc bpc" id="L316" title="1 of 2 branches missed.">            if (!tile.hasFlag) {</span>
+<span class="pc bpc" id="L317" title="1 of 2 branches missed.">                if (tile.hasBomb) {</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">                    if (firstDig){</span>
+<span class="nc" id="L319">                        firstDig = false;</span>
+<span class="nc" id="L320">                        tile.hasBomb = false;</span>
+<span class="nc" id="L321">                        bombCount--;</span>
+<span class="nc" id="L322">                        return dig(tile, true, grid);</span>
+                    }
+<span class="nc" id="L324">                    System.out.println(&quot;Game over&quot;);</span>
+<span class="nc" id="L325">                    isGameOver = true;</span>
+<span class="nc" id="L326">                    tile.displayChar = mine;</span>
+<span class="nc" id="L327">                    return tile;</span>
+                    // TODO: make this end the game
+                } else {
+<span class="fc" id="L330">                    tile.isDug = true;</span>
+<span class="fc" id="L331">                    int adjBomb = getAdjBomb(tile);</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">                    if (adjBomb == 0) {</span>
+<span class="fc" id="L333">                        reveal(tile);</span>
+<span class="fc" id="L334">                        tile.displayChar = empty; //</span>
+                    } else {
+<span class="nc" id="L336">                        tile.displayChar = '0';</span>
+<span class="nc" id="L337">                        tile.displayChar += adjBomb;</span>
+                    }
+<span class="fc" id="L339">                    tilesHidden--;</span>
+
+<span class="fc" id="L341">                }</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">            } else if (!isRipple) {</span>
+<span class="nc" id="L343">                System.out.println(&quot;Careful, that's a flag!&quot;);</span>
+            }
+<span class="nc bnc" id="L345" title="All 2 branches missed.">        } else if (!isRipple) {</span>
+<span class="nc" id="L346">            System.out.println(&quot;Tile Already Dug!&quot;);</span>
+        }
+<span class="fc" id="L348">        return tile;</span>
+    }
+
+    public static int getInputInt(int max) {
+<span class="nc" id="L352">        Scanner scan = new Scanner(System.in);</span>
+        while (true) {
+<span class="nc bnc" id="L354" title="All 2 branches missed.">            if (scan.hasNextInt()) {</span>
+<span class="nc" id="L355">                int val = scan.nextInt();</span>
+<span class="nc bnc" id="L356" title="All 4 branches missed.">                if (val &gt;= -1 &amp;&amp; val &lt;= max){</span>
+<span class="nc" id="L357">                    return val;</span>
+                } else {
+<span class="nc" id="L359">                    System.out.println(&quot;Invalid Value, try again:&quot;);</span>
+                }
+<span class="nc" id="L361">            }</span>
+        }
+    }
+
+    public static String getColor(char character){
+<span class="nc" id="L366">        String ANSI_RESET = &quot;\u001B[0m&quot;;</span>
+<span class="nc" id="L367">        String ANSI_BLACK = &quot;\u001B[30m&quot;;</span>
+<span class="nc" id="L368">        String ANSI_RED = &quot;\u001B[31m&quot;;</span>
+<span class="nc" id="L369">        String ANSI_GREEN = &quot;\u001B[32m&quot;;</span>
+<span class="nc" id="L370">        String ANSI_YELLOW = &quot;\u001B[33m&quot;;</span>
+<span class="nc" id="L371">        String ANSI_BLUE = &quot;\u001B[34m&quot;;</span>
+<span class="nc" id="L372">        String ANSI_PURPLE = &quot;\u001B[35m&quot;;</span>
+<span class="nc" id="L373">        String ANSI_CYAN = &quot;\u001B[36m&quot;;</span>
+<span class="nc" id="L374">        String ANSI_WHITE = &quot;\u001B[37m&quot;;</span>
+
+<span class="nc" id="L376">        String BLACK_BACKGROUND = &quot;\u001B[40m&quot;;</span>
+<span class="nc" id="L377">        String RED_BACKGROUND = &quot;\u001B[41m&quot;;</span>
+<span class="nc" id="L378">        String GREEN_BACKGROUND = &quot;\u001B[42m&quot;;</span>
+<span class="nc" id="L379">        String YELLOW_BACKGROUND = &quot;\u001B[43m&quot;;</span>
+<span class="nc" id="L380">        String BLUE_BACKGROUND = &quot;\u001B[44m&quot;;</span>
+<span class="nc" id="L381">        String PURPLE_BACKGROUND = &quot;\u001B[45m&quot;;</span>
+<span class="nc" id="L382">        String CYAN_BACKGROUND	= &quot;\u001B[46m&quot;;</span>
+<span class="nc" id="L383">        String WHITE_BACKGROUND	= &quot;\u001B[47m&quot;;</span>
+<span class="nc bnc" id="L384" title="All 12 branches missed.">        switch(character){</span>
+            case '1':
+<span class="nc" id="L386">                return ANSI_BLUE;</span>
+            case '2':
+<span class="nc" id="L388">                return ANSI_GREEN;</span>
+            case '3':
+<span class="nc" id="L390">                return ANSI_RED;</span>
+            case '4':
+<span class="nc" id="L392">                return ANSI_PURPLE;</span>
+            case '5':
+<span class="nc" id="L394">                return ANSI_CYAN;</span>
+            case '6':
+<span class="nc" id="L396">                return ANSI_WHITE + RED_BACKGROUND;</span>
+            case '7':
+<span class="nc" id="L398">                return ANSI_WHITE + PURPLE_BACKGROUND;</span>
+            case '8':
+<span class="nc" id="L400">                return ANSI_BLACK + WHITE_BACKGROUND;</span>
+            case mine:
+<span class="nc" id="L402">                return ANSI_CYAN;</span>
+            case flag:
+<span class="nc" id="L404">                return ANSI_GREEN;</span>
+            case flagWrong:
+<span class="nc" id="L406">                return ANSI_RED;</span>
+            default:
+<span class="nc" id="L408">                return ANSI_RESET;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
