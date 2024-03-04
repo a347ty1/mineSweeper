@@ -33,7 +33,6 @@ public class Main {
 
 
     public static void main(String[] args) {// Main running loop, make this run good
-        //TODO: Custom size
         while(true) {
             System.out.println("Input Grid Size");
             System.out.println("X:");
@@ -279,7 +278,7 @@ public class Main {
         int yMin = Math.max(posY - 1, 0);
         int yMax = Math.min(posY + 1, gridYMax - 1);
         int bombCount = 0;
-        for (int x = xMin; x <= xMax; x++) {//TODO: Check this maths
+        for (int x = xMin; x <= xMax; x++) {
             for (int y = yMin; y <= yMax; y++) {
                 if (grid.get(y).get(x).hasBomb) {
                     bombCount++;
@@ -290,7 +289,6 @@ public class Main {
     }
 
     public static void reveal(Tile tile) {
-        //TODO this is for a reveal where there's no adjacent bombs
         int posX = tile.posX;
         int posY = tile.posY;
         ArrayList<Tile> strip = new ArrayList<>();
@@ -325,7 +323,6 @@ public class Main {
                     isGameOver = true;
                     tile.displayChar = mine;
                     return tile;
-                    // TODO: make this end the game
                 } else {
                     tile.isDug = true;
                     int adjBomb = getAdjBomb(tile);
