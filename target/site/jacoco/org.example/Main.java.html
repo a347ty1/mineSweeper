@@ -200,204 +200,203 @@ import java.util.Scanner;
     public static void printGrid(boolean isEndGame) {
         // Printing a list is made of rows. Send all the rows to a buffer and print them one at a time
 <span class="nc" id="L202">        String buffer = &quot;\t&quot;;</span>
-<span class="nc" id="L203">        int iSkip = 0;</span>
-<span class="nc bnc" id="L204" title="All 2 branches missed.">        for (int i = 0; i &lt; gridXMax; i++) {</span>
-<span class="nc bnc" id="L205" title="All 2 branches missed.">            if (i != 0){</span>
-<span class="nc" id="L206">                buffer += &quot; &quot;;</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        for (int i = 0; i &lt; gridXMax; i++) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (i != 0){</span>
+<span class="nc" id="L205">                buffer += &quot; &quot;;</span>
             }
-<span class="nc bnc" id="L208" title="All 2 branches missed.">            if (i % 5 == 0) {</span>
-<span class="nc" id="L209">                buffer += i;</span>
-<span class="nc bnc" id="L210" title="All 6 branches missed.">            } else if (((i + 1) % 5 == 0) &amp;&amp; i &gt;= 10 &amp;&amp; i &lt;= 100) {</span>
-<span class="nc" id="L211">                buffer += ++i;</span>
-<span class="nc" id="L212">                buffer += &quot; &quot;;</span>
-<span class="nc bnc" id="L213" title="All 6 branches missed.">            } else if ((i + 2) % 5 == 0 &amp;&amp; i &gt;= 100 &amp;&amp; i &lt;= 1000) {</span>
-<span class="nc" id="L214">                buffer += (i + 2);</span>
-<span class="nc" id="L215">                i += 2;</span>
-<span class="nc" id="L216">                buffer += &quot;  &quot;;</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            if (i % 5 == 0) {</span>
+<span class="nc" id="L208">                buffer += i;</span>
+<span class="nc bnc" id="L209" title="All 6 branches missed.">            } else if (((i + 1) % 5 == 0) &amp;&amp; i &gt;= 10 &amp;&amp; i &lt;= 100) {</span>
+<span class="nc" id="L210">                buffer += ++i;// Sonarcloud keeps complaining about this but I have no idea how to fix it otherwise</span>
+<span class="nc" id="L211">                buffer += &quot; &quot;;</span>
+<span class="nc bnc" id="L212" title="All 6 branches missed.">            } else if ((i + 2) % 5 == 0 &amp;&amp; i &gt;= 100 &amp;&amp; i &lt;= 1000) {</span>
+<span class="nc" id="L213">                buffer += (i + 2);</span>
+<span class="nc" id="L214">                i += 2;</span>
+<span class="nc" id="L215">                buffer += &quot;  &quot;;</span>
             } else {
-<span class="nc" id="L218">                buffer += &quot; &quot;;</span>
+<span class="nc" id="L217">                buffer += &quot; &quot;;</span>
             }
         }
 
-<span class="nc" id="L222">        buffer += '\n';</span>
-<span class="nc bnc" id="L223" title="All 2 branches missed.">        for (ArrayList&lt;Tile&gt; Row : grid) {</span>
-<span class="nc bnc" id="L224" title="All 2 branches missed.">            if (Row.get(0).posY % 5 == 0) {</span>
-<span class="nc" id="L225">                buffer += Row.get(0).posY;</span>
+<span class="nc" id="L221">        buffer += '\n';</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">        for (ArrayList&lt;Tile&gt; Row : grid) {</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            if (Row.get(0).posY % 5 == 0) {</span>
+<span class="nc" id="L224">                buffer += Row.get(0).posY;</span>
             }
-<span class="nc" id="L227">            buffer += &quot;\t&quot;;</span>
-<span class="nc bnc" id="L228" title="All 2 branches missed.">            for (Tile tile : Row) {</span>
-<span class="nc bnc" id="L229" title="All 2 branches missed.">                if (isEndGame) {</span>
-<span class="nc bnc" id="L230" title="All 4 branches missed.">                    if (tile.hasFlag &amp;&amp; tile.hasBomb) {</span>
-<span class="nc" id="L231">                        tile.displayChar = tile.flag;</span>
-<span class="nc bnc" id="L232" title="All 4 branches missed.">                    } else if (tile.hasFlag &amp;&amp; !tile.hasBomb) {</span>
-<span class="nc" id="L233">                        tile.displayChar = tile.flagWrong;</span>
-<span class="nc bnc" id="L234" title="All 2 branches missed.">                    } else if (tile.hasBomb) {</span>
-<span class="nc" id="L235">                        tile.displayChar = tile.mine;</span>
+<span class="nc" id="L226">            buffer += &quot;\t&quot;;</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">            for (Tile tile : Row) {</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">                if (isEndGame) {</span>
+<span class="nc bnc" id="L229" title="All 4 branches missed.">                    if (tile.hasFlag &amp;&amp; tile.hasBomb) {</span>
+<span class="nc" id="L230">                        tile.displayChar = tile.flag;</span>
+<span class="nc bnc" id="L231" title="All 4 branches missed.">                    } else if (tile.hasFlag &amp;&amp; !tile.hasBomb) {</span>
+<span class="nc" id="L232">                        tile.displayChar = tile.flagWrong;</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">                    } else if (tile.hasBomb) {</span>
+<span class="nc" id="L234">                        tile.displayChar = tile.mine;</span>
                     }
 
                 }
-<span class="nc" id="L239">                buffer += getColor(tile.displayChar) + tile.displayChar + getColor('0');</span>
-<span class="nc" id="L240">                buffer += ' ';</span>
-<span class="nc" id="L241">            }</span>
-<span class="nc bnc" id="L242" title="All 2 branches missed.">            if (Row.get(0).posY % 5 == 0)</span>
+<span class="nc" id="L238">                buffer += getColor(tile.displayChar) + tile.displayChar + getColor('0');</span>
+<span class="nc" id="L239">                buffer += ' ';</span>
+<span class="nc" id="L240">            }</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">            if (Row.get(0).posY % 5 == 0)</span>
             {
-<span class="nc" id="L244">                buffer += &quot;\t&quot; + Row.get(0).posY;</span>
+<span class="nc" id="L243">                buffer += &quot;\t&quot; + Row.get(0).posY;</span>
             }
-<span class="nc" id="L246">            buffer += '\n';</span>
-<span class="nc" id="L247">        }</span>
-<span class="nc" id="L248">        buffer += '\t';</span>
-<span class="nc bnc" id="L249" title="All 2 branches missed.">        for (int i = 0; i &lt; gridXMax; i++) {</span>
-<span class="nc bnc" id="L250" title="All 2 branches missed.">            if (i != 0){</span>
-<span class="nc" id="L251">                buffer += &quot; &quot;;</span>
+<span class="nc" id="L245">            buffer += '\n';</span>
+<span class="nc" id="L246">        }</span>
+<span class="nc" id="L247">        buffer += '\t';</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">        for (int i = 0; i &lt; gridXMax; i++) {</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">            if (i != 0){</span>
+<span class="nc" id="L250">                buffer += &quot; &quot;;</span>
             }
-<span class="nc bnc" id="L253" title="All 2 branches missed.">            if (i % 5 == 0) {</span>
-<span class="nc" id="L254">                buffer += i;</span>
-<span class="nc bnc" id="L255" title="All 6 branches missed.">            } else if (((i + 1) % 5 == 0) &amp;&amp; i &gt;= 10 &amp;&amp; i &lt;= 100) {</span>
-<span class="nc" id="L256">                buffer += ++i;</span>
-<span class="nc" id="L257">                buffer += &quot; &quot;;</span>
-<span class="nc bnc" id="L258" title="All 6 branches missed.">            } else if ((i + 2) % 5 == 0 &amp;&amp; i &gt;= 100 &amp;&amp; i &lt;= 1000) {</span>
-<span class="nc" id="L259">                buffer += (i + 2);</span>
-<span class="nc" id="L260">                i += 2;</span>
-<span class="nc" id="L261">                buffer += &quot;  &quot;;</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">            if (i % 5 == 0) {</span>
+<span class="nc" id="L253">                buffer += i;</span>
+<span class="nc bnc" id="L254" title="All 6 branches missed.">            } else if (((i + 1) % 5 == 0) &amp;&amp; i &gt;= 10 &amp;&amp; i &lt;= 100) {</span>
+<span class="nc" id="L255">                buffer += ++i;</span>
+<span class="nc" id="L256">                buffer += &quot; &quot;;</span>
+<span class="nc bnc" id="L257" title="All 6 branches missed.">            } else if ((i + 2) % 5 == 0 &amp;&amp; i &gt;= 100 &amp;&amp; i &lt;= 1000) {</span>
+<span class="nc" id="L258">                buffer += (i + 2);</span>
+<span class="nc" id="L259">                i += 2;</span>
+<span class="nc" id="L260">                buffer += &quot;  &quot;;</span>
             } else {
-<span class="nc" id="L263">                buffer += &quot; &quot;;</span>
+<span class="nc" id="L262">                buffer += &quot; &quot;;</span>
             }
         }
 
-<span class="nc" id="L267">        System.out.println(buffer);</span>
+<span class="nc" id="L266">        System.out.println(buffer);</span>
 
-<span class="nc" id="L269">    }</span>
+<span class="nc" id="L268">    }</span>
 
 
     public static int getAdjBomb(Tile tile) { //
-<span class="fc" id="L273">        int posX = tile.posX;</span>
-<span class="fc" id="L274">        int posY = tile.posY;</span>
+<span class="fc" id="L272">        int posX = tile.posX;</span>
+<span class="fc" id="L273">        int posY = tile.posY;</span>
 
-<span class="fc" id="L276">        int xMin = Math.max(posX - 1, 0);</span>
-<span class="fc" id="L277">        int xMax = Math.min(posX + 1, gridXMax - 1);</span>
-<span class="fc" id="L278">        int yMin = Math.max(posY - 1, 0);</span>
-<span class="fc" id="L279">        int yMax = Math.min(posY + 1, gridYMax - 1);</span>
-<span class="fc" id="L280">        int bombCount = 0;</span>
-<span class="pc bpc" id="L281" title="1 of 2 branches missed.">        for (int x = xMin; x &lt;= xMax; x++) {</span>
-<span class="nc bnc" id="L282" title="All 2 branches missed.">            for (int y = yMin; y &lt;= yMax; y++) {</span>
-<span class="nc bnc" id="L283" title="All 2 branches missed.">                if (grid.get(y).get(x).hasBomb) {</span>
-<span class="nc" id="L284">                    bombCount++;</span>
+<span class="fc" id="L275">        int xMin = Math.max(posX - 1, 0);</span>
+<span class="fc" id="L276">        int xMax = Math.min(posX + 1, gridXMax - 1);</span>
+<span class="fc" id="L277">        int yMin = Math.max(posY - 1, 0);</span>
+<span class="fc" id="L278">        int yMax = Math.min(posY + 1, gridYMax - 1);</span>
+<span class="fc" id="L279">        int bombCount = 0;</span>
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">        for (int x = xMin; x &lt;= xMax; x++) {</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">            for (int y = yMin; y &lt;= yMax; y++) {</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">                if (grid.get(y).get(x).hasBomb) {</span>
+<span class="nc" id="L283">                    bombCount++;</span>
                 }
             }
         }
-<span class="fc" id="L288">        return bombCount;</span>
+<span class="fc" id="L287">        return bombCount;</span>
     }
 
     public static void reveal(Tile tile) {
-<span class="fc" id="L292">        int posX = tile.posX;</span>
-<span class="fc" id="L293">        int posY = tile.posY;</span>
-<span class="fc" id="L294">        ArrayList&lt;Tile&gt; strip = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L291">        int posX = tile.posX;</span>
+<span class="fc" id="L292">        int posY = tile.posY;</span>
+<span class="fc" id="L293">        ArrayList&lt;Tile&gt; strip = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L296">        int xMin = Math.max(posX - 1, 0);</span>
-<span class="fc" id="L297">        int xMax = Math.min(posX + 1, gridXMax - 1);</span>
-<span class="fc" id="L298">        int yMin = Math.max(posY - 1, 0);</span>
-<span class="fc" id="L299">        int yMax = Math.min(posY + 1, gridYMax - 1);</span>
-<span class="pc bpc" id="L300" title="1 of 2 branches missed.">        for (int y = yMin; y &lt;= yMax; y++) {</span>
+<span class="fc" id="L295">        int xMin = Math.max(posX - 1, 0);</span>
+<span class="fc" id="L296">        int xMax = Math.min(posX + 1, gridXMax - 1);</span>
+<span class="fc" id="L297">        int yMin = Math.max(posY - 1, 0);</span>
+<span class="fc" id="L298">        int yMax = Math.min(posY + 1, gridYMax - 1);</span>
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">        for (int y = yMin; y &lt;= yMax; y++) {</span>
             //printGrid(grid);
-<span class="nc bnc" id="L302" title="All 2 branches missed.">            for (int x = xMin; x &lt;= xMax; x++) {</span>
-<span class="nc" id="L303">                strip = grid.get(y);</span>
-<span class="nc" id="L304">                strip.set(x, dig(grid.get(y).get(x), true, grid));</span>
+<span class="nc bnc" id="L301" title="All 2 branches missed.">            for (int x = xMin; x &lt;= xMax; x++) {</span>
+<span class="nc" id="L302">                strip = grid.get(y);</span>
+<span class="nc" id="L303">                strip.set(x, dig(grid.get(y).get(x), true, grid));</span>
 
             }
         }
 
-<span class="fc" id="L309">    }</span>
+<span class="fc" id="L308">    }</span>
 
 
     public static Tile dig(Tile tile, boolean isRipple, ArrayList&lt;ArrayList&lt;Tile&gt;&gt; grid) {
-<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        if (!tile.isDug) {</span>
-<span class="pc bpc" id="L314" title="1 of 2 branches missed.">            if (!tile.hasFlag) {</span>
-<span class="pc bpc" id="L315" title="1 of 2 branches missed.">                if (tile.hasBomb) {</span>
-<span class="nc bnc" id="L316" title="All 2 branches missed.">                    if (firstDig){</span>
-<span class="nc" id="L317">                        firstDig = false;</span>
-<span class="nc" id="L318">                        tile.hasBomb = false;</span>
-<span class="nc" id="L319">                        bombCount--;</span>
-<span class="nc" id="L320">                        return dig(tile, true, grid);</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">        if (!tile.isDug) {</span>
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">            if (!tile.hasFlag) {</span>
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">                if (tile.hasBomb) {</span>
+<span class="nc bnc" id="L315" title="All 2 branches missed.">                    if (firstDig){</span>
+<span class="nc" id="L316">                        firstDig = false;</span>
+<span class="nc" id="L317">                        tile.hasBomb = false;</span>
+<span class="nc" id="L318">                        bombCount--;</span>
+<span class="nc" id="L319">                        return dig(tile, true, grid);</span>
                     }
-<span class="nc" id="L322">                    System.out.println(&quot;Game over&quot;);</span>
-<span class="nc" id="L323">                    isGameOver = true;</span>
-<span class="nc" id="L324">                    tile.displayChar = MINE;</span>
-<span class="nc" id="L325">                    return tile;</span>
+<span class="nc" id="L321">                    System.out.println(&quot;Game over&quot;);</span>
+<span class="nc" id="L322">                    isGameOver = true;</span>
+<span class="nc" id="L323">                    tile.displayChar = MINE;</span>
+<span class="nc" id="L324">                    return tile;</span>
                 } else {
-<span class="fc" id="L327">                    tile.isDug = true;</span>
-<span class="fc" id="L328">                    int adjBomb = getAdjBomb(tile);</span>
-<span class="pc bpc" id="L329" title="1 of 2 branches missed.">                    if (adjBomb == 0) {</span>
-<span class="fc" id="L330">                        reveal(tile);</span>
-<span class="fc" id="L331">                        tile.displayChar = EMPTY; //</span>
+<span class="fc" id="L326">                    tile.isDug = true;</span>
+<span class="fc" id="L327">                    int adjBomb = getAdjBomb(tile);</span>
+<span class="pc bpc" id="L328" title="1 of 2 branches missed.">                    if (adjBomb == 0) {</span>
+<span class="fc" id="L329">                        reveal(tile);</span>
+<span class="fc" id="L330">                        tile.displayChar = EMPTY; //</span>
                     } else {
-<span class="nc" id="L333">                        tile.displayChar = '0';</span>
-<span class="nc" id="L334">                        tile.displayChar += adjBomb;</span>
+<span class="nc" id="L332">                        tile.displayChar = '0';</span>
+<span class="nc" id="L333">                        tile.displayChar += adjBomb;</span>
                     }
-<span class="fc" id="L336">                    tilesHidden--;</span>
+<span class="fc" id="L335">                    tilesHidden--;</span>
 
-<span class="fc" id="L338">                }</span>
-<span class="nc bnc" id="L339" title="All 2 branches missed.">            } else if (!isRipple) {</span>
-<span class="nc" id="L340">                System.out.println(&quot;Careful, that's a flag!&quot;);</span>
+<span class="fc" id="L337">                }</span>
+<span class="nc bnc" id="L338" title="All 2 branches missed.">            } else if (!isRipple) {</span>
+<span class="nc" id="L339">                System.out.println(&quot;Careful, that's a flag!&quot;);</span>
             }
-<span class="nc bnc" id="L342" title="All 2 branches missed.">        } else if (!isRipple) {</span>
-<span class="nc" id="L343">            System.out.println(&quot;Tile Already Dug!&quot;);</span>
+<span class="nc bnc" id="L341" title="All 2 branches missed.">        } else if (!isRipple) {</span>
+<span class="nc" id="L342">            System.out.println(&quot;Tile Already Dug!&quot;);</span>
         }
-<span class="fc" id="L345">        return tile;</span>
+<span class="fc" id="L344">        return tile;</span>
     }
 
     public static int getInputInt(int max) {
-<span class="nc" id="L349">        Scanner scan = new Scanner(System.in);</span>
+<span class="nc" id="L348">        Scanner scan = new Scanner(System.in);</span>
         while (true) {
-<span class="nc bnc" id="L351" title="All 2 branches missed.">            if (scan.hasNextInt()) {</span>
-<span class="nc" id="L352">                int val = scan.nextInt();</span>
-<span class="nc bnc" id="L353" title="All 4 branches missed.">                if (val &gt;= -1 &amp;&amp; val &lt;= max){</span>
-<span class="nc" id="L354">                    return val;</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">            if (scan.hasNextInt()) {</span>
+<span class="nc" id="L351">                int val = scan.nextInt();</span>
+<span class="nc bnc" id="L352" title="All 4 branches missed.">                if (val &gt;= -1 &amp;&amp; val &lt;= max){</span>
+<span class="nc" id="L353">                    return val;</span>
                 } else {
-<span class="nc" id="L356">                    System.out.println(&quot;Invalid Value, try again:&quot;);</span>
+<span class="nc" id="L355">                    System.out.println(&quot;Invalid Value, try again:&quot;);</span>
                 }
-<span class="nc" id="L358">            }</span>
+<span class="nc" id="L357">            }</span>
         }
     }
 
     public static String getColor(char character){
-<span class="fc" id="L363">        final String ANSI_RESET = &quot;\u001B[0m&quot;;</span>
-<span class="fc" id="L364">        final String ANSI_BLACK = &quot;\u001B[30m&quot;;</span>
-<span class="fc" id="L365">        final String ANSI_RED = &quot;\u001B[31m&quot;;</span>
-<span class="fc" id="L366">        final String ANSI_GREEN = &quot;\u001B[32m&quot;;</span>
-<span class="fc" id="L367">        final String ANSI_BLUE = &quot;\u001B[34m&quot;;</span>
-<span class="fc" id="L368">        final String ANSI_PURPLE = &quot;\u001B[35m&quot;;</span>
-<span class="fc" id="L369">        final String ANSI_CYAN = &quot;\u001B[36m&quot;;</span>
-<span class="fc" id="L370">        final String ANSI_WHITE = &quot;\u001B[37m&quot;;</span>
+<span class="fc" id="L362">        final String ANSI_RESET = &quot;\u001B[0m&quot;;</span>
+<span class="fc" id="L363">        final String ANSI_BLACK = &quot;\u001B[30m&quot;;</span>
+<span class="fc" id="L364">        final String ANSI_RED = &quot;\u001B[31m&quot;;</span>
+<span class="fc" id="L365">        final String ANSI_GREEN = &quot;\u001B[32m&quot;;</span>
+<span class="fc" id="L366">        final String ANSI_BLUE = &quot;\u001B[34m&quot;;</span>
+<span class="fc" id="L367">        final String ANSI_PURPLE = &quot;\u001B[35m&quot;;</span>
+<span class="fc" id="L368">        final String ANSI_CYAN = &quot;\u001B[36m&quot;;</span>
+<span class="fc" id="L369">        final String ANSI_WHITE = &quot;\u001B[37m&quot;;</span>
 
-<span class="fc" id="L372">        final String RED_BACKGROUND = &quot;\u001B[41m&quot;;</span>
-<span class="fc" id="L373">        final String PURPLE_BACKGROUND = &quot;\u001B[45m&quot;;</span>
-<span class="fc" id="L374">        final String WHITE_BACKGROUND	= &quot;\u001B[47m&quot;;</span>
+<span class="fc" id="L371">        final String RED_BACKGROUND = &quot;\u001B[41m&quot;;</span>
+<span class="fc" id="L372">        final String PURPLE_BACKGROUND = &quot;\u001B[45m&quot;;</span>
+<span class="fc" id="L373">        final String WHITE_BACKGROUND	= &quot;\u001B[47m&quot;;</span>
 
-<span class="pc bpc" id="L376" title="8 of 12 branches missed.">        switch(character){</span>
+<span class="pc bpc" id="L375" title="8 of 12 branches missed.">        switch(character){</span>
             case '1':
-<span class="fc" id="L378">                return ANSI_BLUE;</span>
+<span class="fc" id="L377">                return ANSI_BLUE;</span>
             case '2':
-<span class="nc" id="L380">                return ANSI_GREEN;</span>
+<span class="nc" id="L379">                return ANSI_GREEN;</span>
             case '3':
-<span class="nc" id="L382">                return ANSI_RED;</span>
+<span class="nc" id="L381">                return ANSI_RED;</span>
             case '4':
-<span class="fc" id="L384">                return ANSI_PURPLE;</span>
+<span class="fc" id="L383">                return ANSI_PURPLE;</span>
             case '5':
-<span class="nc" id="L386">                return ANSI_CYAN;</span>
+<span class="nc" id="L385">                return ANSI_CYAN;</span>
             case '6':
-<span class="nc" id="L388">                return ANSI_WHITE + RED_BACKGROUND;</span>
+<span class="nc" id="L387">                return ANSI_WHITE + RED_BACKGROUND;</span>
             case '7':
-<span class="nc" id="L390">                return ANSI_WHITE + PURPLE_BACKGROUND;</span>
+<span class="nc" id="L389">                return ANSI_WHITE + PURPLE_BACKGROUND;</span>
             case '8':
-<span class="fc" id="L392">                return ANSI_BLACK + WHITE_BACKGROUND;</span>
+<span class="fc" id="L391">                return ANSI_BLACK + WHITE_BACKGROUND;</span>
             case MINE:
-<span class="fc" id="L394">                return ANSI_CYAN;</span>
+<span class="fc" id="L393">                return ANSI_CYAN;</span>
             case FLAG:
-<span class="nc" id="L396">                return ANSI_GREEN;</span>
+<span class="nc" id="L395">                return ANSI_GREEN;</span>
             case FLAG_WRONG:
-<span class="nc" id="L398">                return ANSI_RED;</span>
+<span class="nc" id="L397">                return ANSI_RED;</span>
             default:
-<span class="nc" id="L400">                return ANSI_RESET;</span>
+<span class="nc" id="L399">                return ANSI_RESET;</span>
         }
     }
 }
