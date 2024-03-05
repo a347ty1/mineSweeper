@@ -54,7 +54,7 @@ public class TileTests {
         Assertions.assertEquals(getColor(MINE), (ANSI_CYAN), "Wrong Colour returned from colour Test of: MINE");
         Assertions.assertEquals(getColor('1'), (ANSI_BLUE), "Wrong Colour returned from colour Test of: 1");
         Assertions.assertEquals(getColor('8'), (ANSI_BLACK + WHITE_BACKGROUND), "Wrong Colour returned from colour Test of: 8");
-        Assertions.assertNotEquals(getColor('4'), '4', "Wrong Colour returned from colour Test of: 4");
+        Assertions.assertNotEquals(getColor('4'), "4", "Wrong Colour returned from colour Test of: 4");
     }
 
     @Test

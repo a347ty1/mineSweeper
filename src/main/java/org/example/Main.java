@@ -200,7 +200,6 @@ public class Main {
     public static void printGrid(boolean isEndGame) {
         // Printing a list is made of rows. Send all the rows to a buffer and print them one at a time
         String buffer = "\t";
-        int iSkip = 0;
         for (int i = 0; i < gridXMax; i++) {
             if (i != 0){
                 buffer += " ";
@@ -208,7 +207,7 @@ public class Main {
             if (i % 5 == 0) {
                 buffer += i;
             } else if (((i + 1) % 5 == 0) && i >= 10 && i <= 100) {
-                buffer += ++i;
+                buffer += ++i;// Sonarcloud keeps complaining about this but I have no idea how to fix it otherwise
                 buffer += " ";
             } else if ((i + 2) % 5 == 0 && i >= 100 && i <= 1000) {
                 buffer += (i + 2);
