@@ -5,10 +5,35 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.example.Main.*;
-import static org.example.Tile.*;
 
 
-public class tileTest {
+public class TileTests {
+
+    final String ANSI_RESET = "\u001B[0m";
+    final String ANSI_BLACK = "\u001B[30m";
+    final String ANSI_RED = "\u001B[31m";
+    final String ANSI_GREEN = "\u001B[32m";
+    final String ANSI_YELLOW = "\u001B[33m";
+    final String ANSI_BLUE = "\u001B[34m";
+    final String ANSI_PURPLE = "\u001B[35m";
+    final String ANSI_CYAN = "\u001B[36m";
+    final String ANSI_WHITE = "\u001B[37m";
+
+    final String BLACK_BACKGROUND = "\u001B[40m";
+    final String RED_BACKGROUND = "\u001B[41m";
+    final String GREEN_BACKGROUND = "\u001B[42m";
+    final String YELLOW_BACKGROUND = "\u001B[43m";
+    final String BLUE_BACKGROUND = "\u001B[44m";
+    final String PURPLE_BACKGROUND = "\u001B[45m";
+    final String CYAN_BACKGROUND	= "\u001B[46m";
+    final String WHITE_BACKGROUND	= "\u001B[47m";
+
+    static final char MINE = '¤';
+    static final char FLAG = '¶';
+    static final char EMPTY = '░';
+    static final  char UNDUG = '█';
+    static final char FLAG_WRONG = '╔';
+
     static int gridXMax = 10;
     static int gridYMax = 10;
     static int testBombCount = 0;
@@ -18,10 +43,20 @@ public class tileTest {
 
         // Involved here are groups of tests to check certain parts of the game generation.
         // Each group contains a few tests to cover each function possible.
+        colorTest();
         gridTests();
         bombTests();
 
     }
+
+    @Test
+    public void colorTest(){
+        Assertions.assertEquals(getColor(MINE), (ANSI_CYAN), "Wrong Colour returned from colour Test of: MINE");
+        Assertions.assertEquals(getColor('1'), (ANSI_BLUE), "Wrong Colour returned from colour Test of: 1");
+        Assertions.assertEquals(getColor('8'), (ANSI_BLACK + WHITE_BACKGROUND), "Wrong Colour returned from colour Test of: 8");
+        Assertions.assertNotEquals(getColor('4'), '4', "Wrong Colour returned from colour Test of: 4");
+    }
+
     @Test
     public void gridTests() {
         Assertions.assertEquals(grid.size(), 10, "Grid Y wrong size");
@@ -52,10 +87,10 @@ public class tileTest {
                 }
             }
         }
+        Assertions.assertNotEquals(0, testBombCount, "No Bombs after Generation");
 
-        Assertions.assertFalse(testBombCount == 0, "No Bombs after Generation");
         dig(grid.get(5).get(5), false, grid);
-        Assertions.assertFalse(grid.get(5).get(5).displayChar == '█', "Tile digging Failed");
+        Assertions.assertNotEquals('█', grid.get(5).get(5).displayChar, "Tile digging Failed");
 
     }
 }

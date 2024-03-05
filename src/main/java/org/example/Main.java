@@ -4,8 +4,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
     static boolean digMode = true;
@@ -54,18 +52,15 @@ public class Main {
         // On different difficulties, have different % of bombs.
         bombPercent = -1; // normal 10% difficulty
         do {
-            System.out.println("Difficulty (% tiles that are bombs):\n" +
-                    "Easy (10)\n" +
-                    "Medium (15)\n" +
-                    "Hard (20)");
+            System.out.println("""
+                    Difficulty (% tiles that are bombs):
+                    Easy (10)
+                    Medium (15)
+                    Hard (20)""");
             bombPercent = getInputInt(100);
         } while  (bombPercent < 0 || bombPercent > 100);
 
         // These chars are effectively the sprites for the game grid
-        char mine = '¤';
-        char flag = '¶';
-        char empty = '░';
-        char undug = '█';
         char flagWrong = '╔';
         grid = constructGrid(gridXMax, gridYMax);
         printGrid(false);
@@ -90,7 +85,11 @@ public class Main {
             System.out.printf("%d bomb(s), %d tile(s), %d flag(s)\n", bombCount, tilesHidden, flagCount);
             printGrid(false);
             while (true) {
-                System.out.println("Mode \n- 1) Flag\n- 2) Dig:");
+                System.out.println("""
+                Mode:
+                - 1) Flag
+                - 2) Dig:
+                """);
                 mode = getInputInt(2);
                 if (mode == 1 || mode == 2) {
                     break;
@@ -201,6 +200,7 @@ public class Main {
     public static void printGrid(boolean isEndGame) {
         // Printing a list is made of rows. Send all the rows to a buffer and print them one at a time
         String buffer = "\t";
+        int iSkip = 0;
         for (int i = 0; i < gridXMax; i++) {
             if (i != 0){
                 buffer += " ";
@@ -219,7 +219,7 @@ public class Main {
             }
         }
 
-        buffer += "\n";
+        buffer += '\n';
         for (ArrayList<Tile> Row : grid) {
             if (Row.get(0).posY % 5 == 0) {
                 buffer += Row.get(0).posY;
@@ -297,7 +297,7 @@ public class Main {
         int xMax = Math.min(posX + 1, gridXMax - 1);
         int yMin = Math.max(posY - 1, 0);
         int yMax = Math.min(posY + 1, gridYMax - 1);
-        for (int y = yMin; y <= yMax; y++) {//TODO: Check this arithmatic
+        for (int y = yMin; y <= yMax; y++) {
             //printGrid(grid);
             for (int x = xMin; x <= xMax; x++) {
                 strip = grid.get(y);
@@ -364,19 +364,13 @@ public class Main {
         final String ANSI_BLACK = "\u001B[30m";
         final String ANSI_RED = "\u001B[31m";
         final String ANSI_GREEN = "\u001B[32m";
-        final String ANSI_YELLOW = "\u001B[33m";
         final String ANSI_BLUE = "\u001B[34m";
         final String ANSI_PURPLE = "\u001B[35m";
         final String ANSI_CYAN = "\u001B[36m";
         final String ANSI_WHITE = "\u001B[37m";
 
-        final String BLACK_BACKGROUND = "\u001B[40m";
         final String RED_BACKGROUND = "\u001B[41m";
-        final String GREEN_BACKGROUND = "\u001B[42m";
-        final String YELLOW_BACKGROUND = "\u001B[43m";
-        final String BLUE_BACKGROUND = "\u001B[44m";
         final String PURPLE_BACKGROUND = "\u001B[45m";
-        final String CYAN_BACKGROUND	= "\u001B[46m";
         final String WHITE_BACKGROUND	= "\u001B[47m";
 
         switch(character){
