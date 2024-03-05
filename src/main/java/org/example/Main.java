@@ -1,6 +1,6 @@
 package org.example;
 
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,11 +16,11 @@ public class Main {
     static int flagCountCorrect = 0;
     static int gridXMax = 1;
     static int gridYMax = 1;
-    static final char mine = '¤';
-    static final char flag = '¶';
-    static final char empty = '░';
-    static final  char undug = '█';
-    static final char flagWrong = '╔';
+    static final char MINE = '¤';
+    static final char FLAG = '¶';
+    static final char EMPTY = '░';
+    static final  char UNDUG = '█';
+    static final char FLAG_WRONG = '╔';
     static boolean isGameOver = false;
 
     static ArrayList<Tile> col = new ArrayList<>(); // Columns are lists of tiles
@@ -157,7 +157,7 @@ public class Main {
                 }
             }
             tile.hasFlag = !tile.hasFlag;
-            tile.displayChar = (tile.hasFlag) ? flag : undug;
+            tile.displayChar = (tile.hasFlag) ? FLAG : UNDUG;
             tile.isFlaggedCorrect = tile.hasFlag == tile.hasBomb;
 
             strip.set(x, tile);
@@ -183,7 +183,7 @@ public class Main {
     }
 
     public static void addBombs(ArrayList<ArrayList<Tile>> grid) {
-        Random rand = new Random();
+        SecureRandom rand = new SecureRandom();
         for (int i = 0; i < gridYMax; i++) {
             ArrayList<Tile> strip = grid.get(i);
             for (int j = 0; j < gridXMax; j++) {
@@ -321,14 +321,14 @@ public class Main {
                     }
                     System.out.println("Game over");
                     isGameOver = true;
-                    tile.displayChar = mine;
+                    tile.displayChar = MINE;
                     return tile;
                 } else {
                     tile.isDug = true;
                     int adjBomb = getAdjBomb(tile);
                     if (adjBomb == 0) {
                         reveal(tile);
-                        tile.displayChar = empty; //
+                        tile.displayChar = EMPTY; //
                     } else {
                         tile.displayChar = '0';
                         tile.displayChar += adjBomb;
@@ -360,24 +360,25 @@ public class Main {
     }
 
     public static String getColor(char character){
-        String ANSI_RESET = "\u001B[0m";
-        String ANSI_BLACK = "\u001B[30m";
-        String ANSI_RED = "\u001B[31m";
-        String ANSI_GREEN = "\u001B[32m";
-        String ANSI_YELLOW = "\u001B[33m";
-        String ANSI_BLUE = "\u001B[34m";
-        String ANSI_PURPLE = "\u001B[35m";
-        String ANSI_CYAN = "\u001B[36m";
-        String ANSI_WHITE = "\u001B[37m";
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_BLACK = "\u001B[30m";
+        final String ANSI_RED = "\u001B[31m";
+        final String ANSI_GREEN = "\u001B[32m";
+        final String ANSI_YELLOW = "\u001B[33m";
+        final String ANSI_BLUE = "\u001B[34m";
+        final String ANSI_PURPLE = "\u001B[35m";
+        final String ANSI_CYAN = "\u001B[36m";
+        final String ANSI_WHITE = "\u001B[37m";
 
-        String BLACK_BACKGROUND = "\u001B[40m";
-        String RED_BACKGROUND = "\u001B[41m";
-        String GREEN_BACKGROUND = "\u001B[42m";
-        String YELLOW_BACKGROUND = "\u001B[43m";
-        String BLUE_BACKGROUND = "\u001B[44m";
-        String PURPLE_BACKGROUND = "\u001B[45m";
-        String CYAN_BACKGROUND	= "\u001B[46m";
-        String WHITE_BACKGROUND	= "\u001B[47m";
+        final String BLACK_BACKGROUND = "\u001B[40m";
+        final String RED_BACKGROUND = "\u001B[41m";
+        final String GREEN_BACKGROUND = "\u001B[42m";
+        final String YELLOW_BACKGROUND = "\u001B[43m";
+        final String BLUE_BACKGROUND = "\u001B[44m";
+        final String PURPLE_BACKGROUND = "\u001B[45m";
+        final String CYAN_BACKGROUND	= "\u001B[46m";
+        final String WHITE_BACKGROUND	= "\u001B[47m";
+
         switch(character){
             case '1':
                 return ANSI_BLUE;
@@ -395,11 +396,11 @@ public class Main {
                 return ANSI_WHITE + PURPLE_BACKGROUND;
             case '8':
                 return ANSI_BLACK + WHITE_BACKGROUND;
-            case mine:
+            case MINE:
                 return ANSI_CYAN;
-            case flag:
+            case FLAG:
                 return ANSI_GREEN;
-            case flagWrong:
+            case FLAG_WRONG:
                 return ANSI_RED;
             default:
                 return ANSI_RESET;
